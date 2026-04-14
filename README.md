@@ -1,66 +1,53 @@
-# 🦠 AI Virus Spread Predictor
+# AI Virus Spread Predictor
 
-A web-based simulation tool that models the spread of a virus through a population using the **SIR (Susceptible–Infected–Recovered)** mathematical model.
+A web-based simulation tool that models the spread of a virus through a population using the SIR (Susceptible-Infected-Recovered) mathematical model.
 
-## 📌 About
+## About
 
-This project was built as a Biology mini-project to visualize how infectious diseases spread and recover in a population. Users can tweak parameters like infection rate, recovery rate, and population size to see real-time epidemic curves.
+This project was built as a Biology mini-project to visualize how infectious diseases spread and recover in a population. Users can adjust parameters like infection rate, recovery rate, and population size to observe real-time epidemic curves.
 
-## 🚀 Features
+## Features
 
 - Interactive SIR model simulation
-- Real-time chart rendering with Chart.js
-- AI-generated insights (peak day, severity, herd immunity threshold)
-- Clean, responsive UI with dark mode
+- Real-time chart rendering
+- Insights like peak infection day, severity level, and herd immunity threshold
+- Clean and responsive UI
 
-## 🛠️ Tech Stack
+## Tech Stack
 
-| Layer | Tech |
-|-------|------|
-| Backend | Python, Flask |
-| Frontend | HTML, CSS, JavaScript |
-| Math | NumPy, SciPy (ODE solver) |
-| Charts | Chart.js |
+- Backend: Python, Flask
+- Frontend: HTML, CSS, JavaScript
+- Math: NumPy, SciPy
+- Charts: Chart.js
 
-## ⚙️ Setup & Run
+## Setup and Run
 
-```bash
-# 1. Clone the repo
-git clone https://github.com/DRAKS17/AI-VIRUS-PREDICTOR.git
-cd AI-VIRUS-PREDICTOR
+Clone the repository and install dependencies:
 
-# 2. Install dependencies
-pip install -r requirements.txt
+    pip install -r requirements.txt
 
-# 3. Run the app
-python app.py
-```
+Then run the app:
 
-Then open your browser at: `http://localhost:5000`
+    python app.py
 
-## 📊 Parameters
+Open your browser at http://localhost:5000
 
-| Parameter | Description |
-|-----------|-------------|
-| Population (N) | Total number of people |
-| Initial Infected | Number of people infected at day 0 |
-| β (Beta) | Infection transmission rate |
-| γ (Gamma) | Recovery rate |
-| Days | Simulation duration |
+## Parameters
 
-## 📁 Project Structure
+- Population (N) - Total number of people
+- Initial Infected - Number of people infected at day 0
+- Beta - Infection transmission rate
+- Gamma - Recovery rate
+- Days - Simulation duration
 
-```
-mini/
-├── app.py              # Flask backend + SIR model logic
-├── requirements.txt    # Python dependencies
-├── templates/
-│   └── index.html      # Main UI page
-└── static/
-    ├── css/style.css
-    └── js/script.js
-```
+## Project Structure
 
-## 👨‍💻 Author
+    app.py              - Flask backend and SIR model logic
+    requirements.txt    - Python dependencies
+    templates/index.html - Main UI page
+    static/css/style.css
+    static/js/script.js
 
-**Daksh Shaparia** — Sem 3 Biology Mini Project
+## Author
+
+Daksh Shaparia - Sem 3 Biology Mini Project
