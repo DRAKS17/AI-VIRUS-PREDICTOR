@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Virus Spread Predictor</title>
+  <meta name="description" content="Simulate virus spread with the SIR epidemiological model. Visualize susceptible, infected, and recovered populations over time." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+
+  <!-- Animated background orbs -->
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
+
+  <div class="page-wrapper">
+    
+    <!-- =========== SIDEBAR =========== -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-icon">
+            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="20" cy="20" r="10" fill="url(#vg)" opacity="0.9"/>
+              <circle cx="20" cy="7"  r="3" fill="url(#vg)"/>
+              <circle cx="20" cy="33" r="3" fill="url(#vg)"/>
+              <circle cx="7"  cy="20" r="3" fill="url(#vg)"/>
+              <circle cx="33" cy="20" r="3" fill="url(#vg)"/>
+              <circle cx="10.5" cy="10.5" r="2.5" fill="url(#vg)"/>
+              <circle cx="29.5" cy="29.5" r="2.5" fill="url(#vg)"/>
+              <circle cx="10.5" cy="29.5" r="2.5" fill="url(#vg)"/>
+              <circle cx="29.5" cy="10.5" r="2.5" fill="url(#vg)"/>
+              <circle cx="20" cy="20" r="5" fill="white" opacity="0.2"/>
+              <defs>
+                <linearGradient id="vg" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#818cf8"/><stop offset="1" stop-color="#38bdf8"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <span class="brand-name">VirusAI</span>
+            <span class="brand-tagline">Spread Predictor</span>
+          </div>
+        </div>
+        <button class="sidebar-toggle-btn close-btn" id="sidebar-close" aria-label="Close sidebar">
+          <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#dashboard" class="nav-link active">
+          <span class="nav-icon">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/></svg>
+          </span>
+          <span class="nav-text">Dashboard</span>
+        </a>
+        <a href="#simulation" class="nav-link">
+          <span class="nav-icon">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/></svg>
+          </span>
+          <span class="nav-text">Simulation</span>
+        </a>
+        <a href="#insights-card" class="nav-link">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.5 2 6 4.5 6 7c0 1.1.4 2.1 1 2.9C5.4 10.6 4 12.2 4 14c0 2.2 1.8 4 4 4h.5c.3.6.8 1 1.5 1h4c.7 0 1.2-.4 1.5-1H16c2.2 0 4-1.8 4-4 0-1.8-1.4-3.4-3-4.1.6-.8 1-1.8 1-2.9C18 4.5 15.5 2 12 2z"/><circle cx="9.5" cy="10" r="1"/><circle cx="14.5" cy="10" r="1"/><path d="M9 14s1 1.5 3 1.5 3-1.5 3-1.5"/></svg>
+          </span>
+          <span class="nav-text">AI Insights</span>
+        </a>
+        <a href="#about" class="nav-link">
+          <span class="nav-icon">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
+          </span>
+          <span class="nav-text">About Project</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- =========== MAIN CONTENT =========== -->
+    <main class="main-content">
+      <div class="app-shell">
+
+        <!-- =========== HEADER =========== -->
+        <header class="top-bar" id="dashboard">
+          <div class="top-bar-left">
+            <button class="sidebar-toggle-btn" id="sidebar-open" aria-label="Open sidebar">
+              <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/></svg>
+            </button>
+            <h1 class="mobile-page-title">Dashboard</h1>
+          </div>
+
+      <div class="header-badge">
+        <span class="badge-dot"></span>
+        SIR Model Active
+      </div>
+    </header>
+
+    <!-- =========== HERO STRIP =========== -->
+    <div class="hero-strip">
+      <h1 class="hero-title">AI Virus Spread <span class="gradient-text">Predictor</span></h1>
+      <p class="hero-sub">Configure the epidemiological parameters below to simulate how an infectious disease spreads and resolves over time using the classic SIR (Susceptible-Infected-Recovered) model.</p>
+    </div>
+
+    <!-- =========== CONTENT GRID =========== -->
+    <div class="content-grid" id="simulation">
+
+      <!-- ---- LEFT: Input Card ---- -->
+      <div class="panel input-panel">
+        <div class="panel-header">
+          <svg class="panel-icon" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2a10 10 0 100 20A10 10 0 0012 2z" stroke="url(#ig1)" stroke-width="1.5"/>
+            <path d="M12 6v6l4 2" stroke="url(#ig1)" stroke-width="1.5" stroke-linecap="round"/>
+            <defs>
+              <linearGradient id="ig1" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#818cf8"/><stop offset="1" stop-color="#38bdf8"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div>
+            <h2 class="panel-title">Simulation Parameters</h2>
+            <p class="panel-sub">Configure your epidemic model</p>
+          </div>
+        </div>
+
+        <form id="sim-form" novalidate>
+
+          <div class="form-section">Population Settings</div>
+
+          <div class="input-card">
+            <div class="input-label-row">
+              <label for="population">
+                <span class="field-icon icon-pop">
+                  <!-- People icon -->
+                  <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/></svg>
+                </span>
+                Total Population (N)
+                <span class="info-trigger" data-tooltip="The total number of people in the simulated region. This defines the maximum theoretical impact of the virus.">
+                  <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
+                </span>
+              </label>
+              <span class="badge-info">N</span>
+            </div>
+            <div class="input-wrap dual-input">
+              <input id="population" class="num-input" type="number" value="1000000" min="1" required autocomplete="off" />
+              <input id="population_slider" class="range-slider" type="range" value="1000000" min="1000" max="10000000" step="1000" />
+            </div>
+            <p class="field-hint">Total number of individuals in the region</p>
+          </div>
+
+          <div class="input-card">
+            <div class="input-label-row">
+              <label for="initial_infected">
+                <span class="field-icon icon-inf">
+                  <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg>
+                </span>
+                Initially Infected (I₀)
+                <span class="info-trigger" data-tooltip="The number of patient-zeros. This is the seed amount of infectious individuals at Day 0 that kicks off the spread.">
+                  <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
+                </span>
+              </label>
+              <span class="badge-info">I₀</span>
+            </div>
+            <div class="input-wrap dual-input">
+              <input id="initial_infected" class="num-input" type="number" value="10" min="1" required autocomplete="off" />
+              <input id="initial_infected_slider" class="range-slider" type="range" value="10" min="1" max="10000" step="1" />
+            </div>
+            <p class="field-hint">Number of infected individuals at day 0</p>
+          </div>
+
+          <div class="form-section">Model Parameters</div>
+
+          <div class="input-card">
+            <div class="input-label-row">
+              <label for="beta">
+                <span class="field-icon icon-beta">
+                  <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd"/></svg>
+                </span>
+                Infection Rate (β)
+                <span class="info-trigger" data-tooltip="Probability of transmission per contact multiplied by the frequency of contacts. A higher Beta (β) means the virus spreads faster and peaks earlier.">
+                  <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
+                </span>
+              </label>
+              <span class="badge-info">β</span>
+            </div>
+            <div class="input-wrap dual-input">
+              <input id="beta" class="num-input" type="number" value="0.3" step="0.01" min="0.001" max="10" required autocomplete="off" />
+              <input id="beta_slider" class="range-slider" type="range" value="0.3" min="0.01" max="5" step="0.01" />
+            </div>
+            <p class="field-hint">Probability of transmission per contact per day</p>
+          </div>
+
+          <div class="input-card">
+            <div class="input-label-row">
+              <label for="gamma">
+                <span class="field-icon icon-gamma">
+                  <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                </span>
+                Recovery Rate (γ)
+                <span class="info-trigger" data-tooltip="The daily recovery probability. It's the inverse of the infection duration. For instance, an average 10-day illness yields a Gamma (γ) of 1/10 = 0.1">
+                  <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
+                </span>
+              </label>
+              <span class="badge-info">γ</span>
+            </div>
+            <div class="input-wrap dual-input">
+              <input id="gamma" class="num-input" type="number" value="0.05" step="0.01" min="0.001" max="10" required autocomplete="off" />
+              <input id="gamma_slider" class="range-slider" type="range" value="0.05" min="0.01" max="1" step="0.01" />
+            </div>
+            <p class="field-hint">Fraction of infected individuals who recover per day</p>
+          </div>
+
+          <div class="input-card">
+            <div class="input-label-row">
+              <label for="days">
+                <span class="field-icon icon-days">
+                  <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/></svg>
+                </span>
+                Simulation Duration (days)
+              </label>
+              <span class="badge-info">T</span>
+            </div>
+            <div class="input-wrap dual-input">
+              <input id="days" class="num-input" type="number" value="200" min="1" max="3650" required autocomplete="off" />
+              <input id="days_slider" class="range-slider" type="range" value="200" min="10" max="1000" step="10" />
+            </div>
+            <p class="field-hint">Number of days to simulate (max 3650)</p>
+          </div>
+
+          <div class="button-row">
+            <button id="reset-btn" type="button" title="Reset to default values">
+              <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/></svg>
+            </button>
+            <button id="simulate-btn" type="submit">
+              <span id="btn-content">
+                <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/></svg>
+                Run Simulation
+              </span>
+              <span id="btn-spinner" class="spinner hidden"></span>
+            </button>
+          </div>
+        </form>
+
+        <!-- SIR Formula Card -->
+        <div class="formula-card">
+          <div class="formula-title">SIR Differential Equations</div>
+          <div class="formula-list">
+            <div class="formula-row"><span class="fcol blue">dS/dt</span><span class="fsep">=</span><span class="fcol-dim">−βSI / N</span></div>
+            <div class="formula-row"><span class="fcol red">dI/dt</span><span class="fsep">=</span><span class="fcol-dim">βSI / N − γI</span></div>
+            <div class="formula-row"><span class="fcol green">dR/dt</span><span class="fsep">=</span><span class="fcol-dim">γI</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---- RIGHT: Results Panel ---- -->
+      <div class="panel results-panel">
+
+        <!-- Error Alert -->
+        <div id="error-alert" class="alert-error hidden">
+          <svg viewBox="0 0 20 20" fill="currentColor" class="alert-icon"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+          <span id="error-msg">An error occurred.</span>
+        </div>
+
+        <!-- Placeholder -->
+        <div id="chart-placeholder">
+          <div class="placeholder-graphic">
+            <div class="pulse-ring r1"></div>
+            <div class="pulse-ring r2"></div>
+            <div class="pulse-ring r3"></div>
+            <div class="placeholder-core">
+              <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="64" height="64" rx="16" fill="url(#plg)"/>
+                <path d="M12 44 L22 28 L32 34 L42 18 L52 30" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+                <defs><linearGradient id="plg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#38bdf8"/></linearGradient></defs>
+              </svg>
+            </div>
+          </div>
+          <h2 class="placeholder-title">Start Your Simulation</h2>
+          <p class="placeholder-desc">Configure parameters on the left and click <strong>Run Simulation</strong> to visualize the epidemic curve in real time.</p>
+          <div class="placeholder-pills">
+            <span class="pill blue">Susceptible</span>
+            <span class="pill red">Infected</span>
+            <span class="pill green">Recovered</span>
+          </div>
+        </div>
+
+        <!-- Results (hidden until simulated) -->
+        <div id="results-container" class="hidden">
+
+          <!-- Stat Cards -->
+          <div class="stats-grid" id="stats-section">
+            <div class="stat-card sc-red">
+              <div class="sc-icon">
+                <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 10.586V6z" clip-rule="evenodd"/></svg>
+              </div>
+              <div class="sc-info">
+                <span class="sc-label">Peak Infected</span>
+                <span id="stat-peak-infected" class="sc-value">—</span>
+              </div>
+            </div>
+            <div class="stat-card sc-yellow">
+              <div class="sc-icon">
+                <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/></svg>
+              </div>
+              <div class="sc-info">
+                <span class="sc-label">Peak Day</span>
+                <span id="stat-peak-day" class="sc-value">—</span>
+              </div>
+            </div>
+            <div class="stat-card sc-green">
+              <div class="sc-icon">
+                <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              </div>
+              <div class="sc-info">
+                <span class="sc-label">Total Recovered</span>
+                <span id="stat-recovered" class="sc-value">—</span>
+              </div>
+            </div>
+            <div class="stat-card sc-purple">
+              <div class="sc-icon r0-icon">R₀</div>
+              <div class="sc-info">
+                <span class="sc-label">Repro. Number (R₀)</span>
+                <span id="stat-r0" class="sc-value">—</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chart -->
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div class="chart-card-title">
+                <svg class="chart-card-icon" viewBox="0 0 20 20" fill="none">
+                  <path d="M2 10h5l2 5 4-10 2 5h3" stroke="url(#ccg)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                  <defs><linearGradient id="ccg" x1="2" y1="2" x2="18" y2="18" gradientUnits="userSpaceOnUse"><stop stop-color="#818cf8"/><stop offset="1" stop-color="#34d399"/></linearGradient></defs>
+                </svg>
+                Epidemic Curve — SIR Model
+              </div>
+              <div class="chart-legend-row">
+                <span class="leg-item"><span class="leg-dot ld-blue"></span>Susceptible</span>
+                <span class="leg-item"><span class="leg-dot ld-red"></span>Infected</span>
+                <span class="leg-item"><span class="leg-dot ld-green"></span>Recovered</span>
+              </div>
+            </div>
+            <div class="chart-img-wrap">
+              <canvas id="sir-chart"></canvas>
+            </div>
+          </div>
+
+          <!-- AI Insights Card -->
+          <div class="insights-card" id="insights-card">
+            <div class="insights-header">
+              <div class="insights-title-row">
+                <div class="insights-icon-wrap">
+                  <!-- Brain/AI icon -->
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C8.5 2 6 4.5 6 7c0 1.1.4 2.1 1 2.9C5.4 10.6 4 12.2 4 14c0 2.2 1.8 4 4 4h.5c.3.6.8 1 1.5 1h4c.7 0 1.2-.4 1.5-1H16c2.2 0 4-1.8 4-4 0-1.8-1.4-3.4-3-4.1.6-.8 1-1.8 1-2.9C18 4.5 15.5 2 12 2z" stroke="url(#brainG)" stroke-width="1.5" stroke-linejoin="round"/>
+                    <circle cx="9.5" cy="10" r="1" fill="url(#brainG)"/>
+                    <circle cx="14.5" cy="10" r="1" fill="url(#brainG)"/>
+                    <path d="M9 14s1 1.5 3 1.5 3-1.5 3-1.5" stroke="url(#brainG)" stroke-width="1.2" stroke-linecap="round"/>
+                    <defs>
+                      <linearGradient id="brainG" x1="4" y1="2" x2="20" y2="22" gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#818cf8"/>
+                        <stop offset="1" stop-color="#38bdf8"/>
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="insights-title">AI Insights</h3>
+                  <p class="insights-sub">Model-generated analysis of epidemic dynamics</p>
+                </div>
+              </div>
+              <div id="severity-badge" class="severity-badge"></div>
+            </div>
+
+            <div class="insights-body">
+              <div class="insight-row ir-yellow" id="ins-peak">
+                <span class="ir-icon">📅</span>
+                <span class="ir-text" id="ins-peak-text">—</span>
+              </div>
+              <div class="insight-row ir-red" id="ins-max">
+                <span class="ir-icon">🦠</span>
+                <span class="ir-text" id="ins-max-text">—</span>
+              </div>
+              <div class="insight-row ir-orange" id="ins-decrease">
+                <span class="ir-icon">📉</span>
+                <span class="ir-text" id="ins-decrease-text">—</span>
+              </div>
+              <div class="insight-row ir-green" id="ins-recovery">
+                <span class="ir-icon">💊</span>
+                <span class="ir-text" id="ins-recovery-text">—</span>
+              </div>
+              <div class="insight-row ir-purple" id="ins-r0">
+                <span class="ir-icon">🔬</span>
+                <span class="ir-text" id="ins-r0-text">—</span>
+              </div>
+              <div class="insight-row ir-blue" id="ins-herd">
+                <span class="ir-icon">🛡️</span>
+                <span class="ir-text" id="ins-herd-text">—</span>
+              </div>
+            </div>
+          </div><!-- /insights-card -->
+
+      </div><!-- /app-shell -->
+      
+      <footer class="site-footer" id="about">
+        <div class="footer-top">
+        <span>Built with</span>
+        <span class="tech-pill">Flask</span>
+        <span class="tech-pill">NumPy</span>
+        <span class="tech-pill">SciPy</span>
+        <span class="tech-pill">Chart.js</span>
+      </div>
+      <div class="footer-bottom">
+        <span>Interactive SIR Epidemiological Model Analyzer</span>
+        <span class="f-dot">·</span>
+        <span class="f-muted">For educational and exploratory purposes.</span>
+      </div>
+      </footer>
+    </main><!-- /main-content -->
+  </div><!-- /page-wrapper -->
+
+  <!-- Chart.js + Annotation plugin -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js"></script>
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
