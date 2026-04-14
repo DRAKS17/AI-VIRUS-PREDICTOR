@@ -22,7 +22,12 @@ This project was built as a Biology mini-project to visualize how infectious dis
 
 ## Setup and Run
 
-Clone the repository and install dependencies:
+Clone the repository:
+
+    git clone https://github.com/DRAKS17/AI-VIRUS-PREDICTOR.git
+    cd AI-VIRUS-PREDICTOR
+
+Then install dependencies:
 
     pip install -r requirements.txt
 
